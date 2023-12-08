@@ -38,6 +38,7 @@ func main() {
 	}
 
 	fmt.Println(partOne(graph, directions))
+	fmt.Println(partTwo(graph, directions))
 }
 
 func partOne(graph Graph, directions string) int {
@@ -57,4 +58,48 @@ func partOne(graph Graph, directions string) int {
 	}
 
 	return moves
+}
+
+func partTwo(graph Graph, directions string) int {
+	curNodes := make([]Node, 0)
+	totalMoves := make([]int, 0)
+	for k, v := range graph.nodes {
+		if k[2:] == "A" {
+			curNodes = append(curNodes, v)
+		}
+	}
+
+	for i := 0; i < len(curNodes); i++ {
+		moves, dirIdx := 0, 0
+		for curNodes[i].val[2:] != "Z" {
+			if directions[dirIdx] == 82 { //Right byte
+				curNodes[i] = graph.nodes[curNodes[i].right]
+			} else if directions[dirIdx] == 76 { //Left byte
+				curNodes[i] = graph.nodes[curNodes[i].left]
+			}
+			moves += 1
+			dirIdx = (dirIdx + 1) % len(directions)
+		}
+		totalMoves = append(totalMoves, moves)
+	}
+
+	return lcm(totalMoves, 0)
+}
+
+func gcd(a, b int) int {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
+func lcm(moves []int, idx int) int {
+	if idx == len(moves)-1 {
+		return moves[idx]
+	}
+	a := moves[idx]
+	b := lcm(moves, idx+1)
+	return a * b / gcd(a, b)
 }
