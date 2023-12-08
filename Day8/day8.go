@@ -51,10 +51,6 @@ func partOne(graph Graph, directions string) int {
 		}
 		moves += 1
 		i = (i + 1) % len(directions)
-
-		if curNode.val == "ZZZ" {
-			break
-		}
 	}
 
 	return moves
