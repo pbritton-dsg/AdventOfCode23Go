@@ -8,16 +8,6 @@ import (
 	"strings"
 )
 
-type Node struct {
-	val   string
-	left  string
-	right string
-}
-
-type Graph struct {
-	nodes map[string]Node
-}
-
 func main() {
 	f, _ := os.Open("inputs/input.txt")
 	defer f.Close()
