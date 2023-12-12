@@ -57,23 +57,84 @@ func partOne(grid [][]string) int {
 		}
 	}
 
-	dfs(grid, row, col, 0)
-	return maxDepth / 2
-}
-
-func dfs(grid [][]string, row int, col int, depth int) {
-	if grid[row][col] == "S" && visited[row][col] == 1 {
-		maxDepth = max(maxDepth, depth)
-	}
-	visited[row][col] = 1
+	length := 0
 	for key, value := range neighbors {
 		fields := strings.Split(key, ",")
 		nr, _ := strconv.Atoi(strings.TrimSpace(fields[0]))
 		nc, _ := strconv.Atoi(strings.TrimSpace(fields[1]))
 		nr += row
 		nc += col
-		if nr > -1 && nr < len(grid) && nc > -1 && nc < len(grid[row]) && ((visited[nr][nc] == 0 && slices.Contains(value, grid[nr][nc])) || grid[nr][nc] == "S") {
-			dfs(grid, nr, nc, depth+1)
+		if nr > -1 && nr < len(grid) && nc > -1 && nc < len(grid[row]) && slices.Contains(value, grid[nr][nc]) {
+			dir := moveDir[key]
+			length = traversePath(grid, nr, nc, dir)
+			break
 		}
 	}
+	return length / 2
+}
+
+type direction int
+
+var moveDir = map[string]direction{
+	"-1, 0": UP,
+	"0, -1": LEFT,
+	"0, 1":  RIGHT,
+	"1, 0":  DOWN,
+}
+
+const (
+	UP    direction = 4
+	DOWN            = 3
+	LEFT            = 2
+	RIGHT           = 1
+)
+
+func getNextMove(moveDir direction, pipe string) (int, int) {
+	if moveDir == UP {
+		if pipe == "|" {
+			return -1, 0
+		} else if pipe == "F" {
+			return 0, 1
+		} else if pipe == "7" {
+			return 0, -1
+		}
+	} else if moveDir == DOWN {
+		if pipe == "|" {
+			return 1, 0
+		} else if pipe == "J" {
+			return 0, -1
+		} else if pipe == "L" {
+			return 0, 1
+		}
+	} else if moveDir == LEFT {
+		if pipe == "-" {
+			return 0, -1
+		} else if pipe == "F" {
+			return 1, 0
+		} else if pipe == "L" {
+			return -1, 0
+		}
+	} else if moveDir == RIGHT {
+		if pipe == "-" {
+			return 0, 1
+		} else if pipe == "J" {
+			return -1, 0
+		} else if pipe == "7" {
+			return 1, 0
+		}
+	}
+	return -999, -999
+}
+
+func traversePath(grid [][]string, row int, col int, dir direction) int {
+	pathLength := 1
+	for grid[row][col] != "S" {
+		nr, nc := getNextMove(dir, grid[row][col])
+		row += nr
+		col += nc
+		dir = moveDir[strconv.Itoa(nr)+", "+strconv.Itoa(nc)]
+		pathLength += 1
+	}
+
+	return pathLength
 }
