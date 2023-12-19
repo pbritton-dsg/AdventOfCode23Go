@@ -11,8 +11,7 @@ func main() {
 	defer f.Close()
 
 	scanner := bufio.NewScanner(f)
-	total := 0
-	//part2 := true
+	totalPartOne, totalPartTwo := 0, 0
 	for scanner.Scan() {
 		grid := make([][]rune, 0)
 		input := scanner.Text()
@@ -25,9 +24,11 @@ func main() {
 			scanner.Scan()
 			input = scanner.Text()
 		}
-		total += countCols(grid, 1) + countRows(grid, 1)
+		totalPartOne += countCols(grid, 0) + countRows(grid, 0)
+		totalPartTwo += countCols(grid, 1) + countRows(grid, 1)
 	}
-	fmt.Println(total)
+	fmt.Println("Part 1: ", totalPartOne)
+	fmt.Println("Part 2: ", totalPartTwo)
 }
 
 func countCols(grid [][]rune, threshold int) int {
