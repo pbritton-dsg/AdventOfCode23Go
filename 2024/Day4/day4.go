@@ -93,6 +93,8 @@ func partTwo(grid [][]string) int {
 		}
 	}
 
+	fmt.Println(cache)
+
 	return sum
 }
 
