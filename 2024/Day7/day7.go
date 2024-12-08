@@ -15,7 +15,6 @@ func main() {
 	defer f.Close()
 
 	scanner := bufio.NewScanner(f)
-	results = make(map[int]bool)
 	equations := make(map[int][]int)
 	for scanner.Scan() {
 		sides := strings.Split(scanner.Text(), ":")
