@@ -10,8 +10,6 @@ import (
 	"time"
 )
 
-var results map[int]bool
-
 func main() {
 	f, _ := os.Open("inputs/input.txt")
 	defer f.Close()
@@ -43,17 +41,12 @@ func partOne(equations map[int][]int) int {
 		sum += checkResult(result, values)
 	}
 
-	for r, _ := range results {
-		sum += r
-	}
-
 	return sum
 }
 
 func checkResult(result int, values []int) int {
 	if len(values) == 1 {
 		if values[0] == result {
-			results[result] = true
 			return result
 		} else {
 			return 0
@@ -68,11 +61,8 @@ func checkResult(result int, values []int) int {
 	z := append([]int{n0 * n1}, values...)
 	w := append([]int{n3}, values...)
 
-	checkResult(result, y)
-	checkResult(result, z)
-	checkResult(result, w)
+	return max(checkResult(result, y), checkResult(result, z), checkResult(result, w))
 
-	return 0
 }
 
 func timeTrack(start time.Time, name string) {
